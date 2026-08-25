@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据科学岗位远程薪资溢价分析看板</title>
+    <!-- ECharts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <!-- 数据文件 -->
+    <script src="data/data.js"></script>
+    <!-- 样式 -->
+    <link rel="stylesheet" href="assets/styles/main.css">
+</head>
+
+<body>
+    <!-- 头部业务问题 -->
+    <header class="business-question">
+        <h2>业务问题：哪些数据岗位在完全远程办公下，薪资不仅没有降低，反而比同级别非远程岗位高？</h2>
+    </header>
+
+    <!-- KPI 卡片区域 -->
+    <div class="kpi-container">
+        <div class="kpi-card" id="kpi-remote-avg">远程平均薪资: --</div>
+        <div class="kpi-card" id="kpi-onsite-avg">非远程平均薪资: --</div>
+        <div class="kpi-card" id="kpi-premium">整体溢价: --</div>
+        <div class="kpi-card" id="kpi-high-count">高溢价岗位数: --</div>
+    </div>
+
+    <!-- 全局筛选器 -->
+    <div class="filter-container">
+        <div class="filter-group">
+            <label>选择年份：</label>
+            <select id="year-filter">
+                <option value="all">全部年份</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>公司规模：</label>
+            <select id="size-filter">
+                <option value="all">全部</option>
+                <option value="S">小型 (S)</option>
+                <option value="M">中型 (M)</option>
+                <option value="L">大型 (L)</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- 图表区域 -->
+    <div class="chart-row">
+        <div class="chart-card">
+            <div id="chart-bar" class="chart-container"></div>
+            <div class="insight-text">
+                <span class="insight-title">洞察标题：前10名高溢价岗位类型分散多元，最高溢价达291%</span>
+                <p class="insight-narrative">
+                    远程溢价率最高的岗位涵盖数据分析、应用开发、数据科学、数据工程等多种类型，并非单一类别主导（数据分析类仅占3席）。最高溢价达291%（产品数据分析师）。AI工程师和ML工程师均未进入前10，说明当前远程高溢价并非由AI/ML岗位驱动。部分岗位样本量较小，极端溢价的数据代表性有限。
+                </p>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div id="chart-compare" class="chart-container"></div>
+            <div class="insight-text">
+                <span class="insight-title">洞察标题：TOP5远程vs非远程差距最高达14.3万美元，岗位类型分散多元</span>
+                <p class="insight-narrative">
+                    高级应用数据科学家(SE)远程平均薪资达20.8万美元，比非远程高出14.3万美元，差距最大。溢价TOP5中涵盖数据科学、数据分析、应用开发等不同岗位类型，溢价幅度与岗位级别间直接关联不显著。样本量较少的岗位（如部分中级岗位仅几十个样本）更易出现极端溢价，解读时需谨慎。
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="chart-row">
+        <div class="chart-card full-width">
+            <div id="chart-trend" class="chart-container"></div>
+            <div class="insight-text">
+                <span class="insight-title">洞察标题：2020-2025年远程溢价逐年收窄并转负，2025年整体仍为负溢价</span>
+                <p class="insight-narrative">
+                    2020年远程溢价为+22.2%，此后逐年下降至2022年的+1.5%。2023年起溢价转-5.8%，2024年为-6.7%，2025年为-3.6%，远程岗位整体薪资已连续三年低于非远程。这一趋势表明，远程办公红利期已经消退，企业可能已调整远程薪酬策略，远程不再是天然的高薪标签。
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第二行：散点图 + 环形图 -->
+    <div class="chart-row">
+        <div class="chart-card">
+            <div id="chart-scatter" class="chart-container"></div>
+            <div class="insight-text">
+                <span class="insight-title">洞察标题：仅主管级出现正溢价(+3.2%)，初中高级整体均为负溢价</span>
+                <p class="insight-narrative">
+                    散点图中每个气泡代表一个具体岗位，越靠近左上说明远程薪资优势越明显。数据显示：初级溢价-1.5%，中级溢价-1.5%，高级溢价-1.1%，仅主管级出现正溢价+3.2%。大多数经验级别中远程薪资低于非远程，"高级岗远程更高"的假设在当前数据中并不成立。
+                </p>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div id="chart-donut" class="chart-container"></div>
+            <div class="insight-text">
+                <span class="insight-title">洞察标题：远程岗位以其他数据岗和工程师为主，AI/ML合计仅占10.6%</span>
+                <p class="insight-narrative">
+                    环形图展示了远程岗位的类别构成。占比最大的是其他数据岗(37.2%)、数据工程师(10.67%)、数据科学家(10.53%)和数据分析师(12.17%)。AI工程师仅占2.81%、机器学习工程师占8.43%，两者合计仅11.34%，远未达到远程岗位的主体地位。
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第三行：雷达图 + 公司规模对比图 -->
+    <div class="chart-row">
+        <div class="chart-card">
+            <div id="chart-radar" class="chart-container"></div>
+            <div class="insight-text">
+                <span class="insight-title">洞察标题：所有规模下远程薪资均低于非远程，大型公司差距最大(-28.5%)</span>
+                <p class="insight-narrative">
+                    雷达图维度覆盖大、中、小三种公司规模。数据显示：小型公司远程溢价-15.4%，中型-4.8%，大型-28.5%。三种规模下远程薪资全面低于非远程，大型公司的差距尤为突出，远程薪资仅为非远程的约71%。这反映大型企业可能更倾向于为核心在岗员工支付更高薪酬。
+                </p>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div id="chart-size-compare" class="chart-container"></div>
+            <div class="insight-text">
+                <span class="insight-title">洞察标题：所有规模下远程薪资均低于非远程，大型公司负溢价最深(-28.5%)</span>
+                <p class="insight-narrative">
+                    分组柱状图并排展示三种公司规模下的远程（蓝色）与非远程（红色）平均薪资，橙色折线叠加溢价率。小型公司溢价-15.4%，中型-4.8%，大型-28.5%——三种规模下远程薪资全面低于非远程，大型企业的负溢价最为严重。图表中蓝色柱全部低于红色柱的视觉事实直接印证：当前市场中远程岗位已不享受系统性正溢价，尤其在大型企业，非远程岗位的薪酬优势更为显著。
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 脚本文件（顺序：工具、图表、主入口） -->
+    <script src="js/utils/dataProcessor.js"></script>
+    <script src="js/charts/barChart.js"></script>
+    <script src="js/charts/compareChart.js"></script>
+    <script src="js/charts/trendChart.js"></script>
+    <script src="js/charts/scatterChart.js"></script>
+    <script src="js/charts/donutChart.js"></script>
+    <script src="js/charts/radarChart.js"></script>
+    <script src="js/charts/sizeCompareChart.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
